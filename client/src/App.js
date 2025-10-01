@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LobbiesPage from './pages/LobbiesPage';
+import Navbar from './components/Navbar';
 import './App.css';
 
 function App() {
