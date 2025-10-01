@@ -1,8 +1,19 @@
-### Login an existing user
-POST http://localhost:5001/api/users/login
+### GET all public lobbies (will be empty at first)
+GET http://localhost:5001/api/lobbies
+
+### ========================================
+
+### CREATE a new lobby (PROTECTED)
+# 1. First, LOG IN using the request from the last lesson to get a fresh token.
+# 2. COPY the token from the response.
+# 3. PASTE the token after "x-auth-token: " below.
+POST http://localhost:5001/api/lobbies
 Content-Type: application/json
+x-auth-token: PASTE_YOUR_JWT_TOKEN_HERE
 
 {
-    "email": "test@example.com",
-    "password": "password123"
+    "game": "Valorant",
+    "description": "Chill competitive games, need 2 more!",
+    "maxPlayers": 5,
+    "isPrivate": false
 }
