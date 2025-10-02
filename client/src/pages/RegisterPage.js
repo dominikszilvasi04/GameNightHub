@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import './Form.css'; 
 
 const RegisterPage = () => {
     // useNavigate is a hook for programmatic navigation
@@ -52,12 +51,14 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="form-container">
-            <h1>Register</h1>
+    <div className="max-w-md mx-auto mt-10">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h1 className="text-2xl font-bold mb-6 text-center">Create Your Account</h1>
             <form onSubmit={onSubmit}>
-                <div className="form-group">
-                    <label>Username</label>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
                     <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="username"
                         value={username}
@@ -65,9 +66,10 @@ const RegisterPage = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Email</label>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
                     <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="email"
                         name="email"
                         value={email}
@@ -75,9 +77,10 @@ const RegisterPage = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Password</label>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
                     <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         type="password"
                         name="password"
                         value={password}
@@ -86,9 +89,10 @@ const RegisterPage = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Confirm Password</label>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
                     <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         type="password"
                         name="password2"
                         value={password2}
@@ -97,10 +101,16 @@ const RegisterPage = () => {
                         required
                     />
                 </div>
-                <button type="submit">Register</button>
+                <button
+                    className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                >
+                    Register
+                </button>
             </form>
         </div>
-    );
+    </div>
+  );
 };
 
 export default RegisterPage;
