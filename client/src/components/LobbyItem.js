@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from './Button';
+import { Link } from 'react-router-dom';
 
 const LobbyItem = ({ lobby }) => {
   return (
@@ -15,7 +16,9 @@ const LobbyItem = ({ lobby }) => {
         </div>
         <div className="text-sm text-gray-500">Players</div>
         <div className="mt-2">
-          <Button>View</Button>
+        <Link to={`/lobbies/${lobby._id}`}>
+            <Button>View</Button>
+        </Link>
         </div>
       </div>
     </div>

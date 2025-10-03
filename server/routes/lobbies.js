@@ -19,6 +19,22 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    const lobby = await Lobby.findById(req.params.id)
+      .populate('creator', 'username') // Get creator's username
+      .populate('players', 'username'); // Get all players' usernames
+
+    if (!lobby) {
+      return res.status(404).json({ msg: 'Lobby not found' });
+    }
+    res.json(lobby);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   POST /api/lobbies
 // @desc    Create a new lobby
 // @access  Private 

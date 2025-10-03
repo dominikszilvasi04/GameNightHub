@@ -6,18 +6,20 @@ import RegisterPage from './pages/RegisterPage';
 import LobbiesPage from './pages/LobbiesPage';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
+import LobbyDetailPage from './pages/LobbyDetailPage';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Navbar />
-        <div className="container">
+        <div className="max-w-4xl mx-auto p-4">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/lobbies" element={<LobbiesPage />} />
+            <Route path="/lobbies/:id" element={<LobbyDetailPage />} />
           </Routes>
         </div>
       </Router>
