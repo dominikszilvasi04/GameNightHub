@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST /api/lobbies
 // @desc    Create a new lobby
-// @access  Private (notice the 'auth' middleware)
+// @access  Private 
 router.post('/', auth, async (req, res) => {
     const { game, description, maxPlayers, isPrivate } = req.body;
 
@@ -36,6 +36,8 @@ router.post('/', auth, async (req, res) => {
         });
 
         const lobby = await newLobby.save();
+        // We use .populate() here to fetch the creator's username before sending
+        await lobby.populate('creator', 'username');
         res.json(lobby);
     } catch (err) {
         console.error(err.message);
