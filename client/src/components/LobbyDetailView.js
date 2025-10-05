@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import api from '../api';
 import Button from './Button';
 import AuthContext from '../context/AuthContext'; 
+import Chat from './Chat';
 
 const LobbyDetailView = ({ lobbyId }) => {
   const [lobby, setLobby] = useState(null);
@@ -86,6 +87,7 @@ const LobbyDetailView = ({ lobbyId }) => {
       <div className="mt-6 text-center">
         {renderJoinButton()}
       </div>
+      {isUserInLobby && <Chat lobbyId={lobbyId} />}
     </div>
   );
 };
