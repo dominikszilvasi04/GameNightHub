@@ -61,4 +61,59 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
+// Add these two routes after your POST '/' route
+
+// @route   PUT /api/lobbies/:id/join
+// @desc    Join a lobby
+// @access  Private
+router.put('/:id/join', auth, async (req, res) => {
+  try {
+    const lobby = await Lobby.findById(req.params.id);
+    if (!lobby) {
+      return res.status(404).json({ msg: 'Lobby not found' });
+    }
+
+    // Check if user is already in the lobby
+    if (lobby.players.some(player => player.equals(req.user.id))) {
+      return res.status(400).json({ msg: 'User already in lobby' });
+    }
+
+    // Check if lobby is full
+    if (lobby.players.length >= lobby.maxPlayers) {
+      return res.status(400).json({ msg: 'Lobby is full' });
+    }
+
+    lobby.players.push(req.user.id);
+    await lobby.save();
+
+    await lobby.populate(['creator', 'players'], 'username');
+    res.json(lobby);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT /api/lobbies/:id/leave
+// @desc    Leave a lobby
+// @access  Private
+router.put('/:id/leave', auth, async (req, res) => {
+  try {
+    const lobby = await Lobby.findById(req.params.id);
+    if (!lobby) {
+      return res.status(404).json({ msg: 'Lobby not found' });
+    }
+
+    // Remove user from players array
+    lobby.players = lobby.players.filter(player => !player.equals(req.user.id));
+    await lobby.save();
+
+    await lobby.populate(['creator', 'players'], 'username');
+    res.json(lobby);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
