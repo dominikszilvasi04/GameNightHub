@@ -1,8 +1,7 @@
 import React from 'react';
 import Button from './Button';
-import { Link } from 'react-router-dom';
 
-const LobbyItem = ({ lobby }) => {
+const LobbyItem = ({ lobby, onView }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-4 flex justify-between items-center">
       <div>
@@ -16,9 +15,7 @@ const LobbyItem = ({ lobby }) => {
         </div>
         <div className="text-sm text-gray-500">Players</div>
         <div className="mt-2">
-        <Link to={`/lobbies/${lobby._id}`}>
-            <Button>View</Button>
-        </Link>
+          <Button onClick={() => onView(lobby._id)}>View</Button>
         </div>
       </div>
     </div>

@@ -6,7 +6,6 @@ import RegisterPage from './pages/RegisterPage';
 import LobbiesPage from './pages/LobbiesPage';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
-import LobbyDetailPage from './pages/LobbyDetailPage';
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/lobbies" element={<LobbiesPage />} />
-            <Route path="/lobbies/:id" element={<LobbyDetailPage />} />
           </Routes>
         </div>
       </Router>

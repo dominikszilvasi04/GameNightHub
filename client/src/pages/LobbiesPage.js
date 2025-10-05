@@ -3,16 +3,18 @@ import api from '../api';
 import AuthContext from '../context/AuthContext';
 import LobbyItem from '../components/LobbyItem';
 import Button from '../components/Button';
-import Modal from '../components/Modal'; 
-import CreateLobbyForm from '../components/CreateLobbyForm'; 
+import Modal from '../components/Modal';
+import CreateLobbyForm from '../components/CreateLobbyForm';
+import LobbyDetailView from '../components/LobbyDetailView'; 
 
 const LobbiesPage = () => {
   const [lobbies, setLobbies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedLobbyId, setSelectedLobbyId] = useState(null); 
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchLobbies = async () => {
       try {
         const res = await api.get('/lobbies');
@@ -27,9 +29,8 @@ const LobbiesPage = () => {
   }, []);
 
   const handleLobbyCreated = (newLobby) => {
-    // Add the new lobby to the top of our list and close the modal
     setLobbies([newLobby, ...lobbies]);
-    setIsModalOpen(false);
+    setIsCreateModalOpen(false);
   };
 
   if (loading) {
@@ -41,19 +42,27 @@ const LobbiesPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Public Lobbies</h1>
         {user && (
-          // Make the button open the modal
-          <Button onClick={() => setIsModalOpen(true)}>Create New Lobby</Button>
+          <Button onClick={() => setIsCreateModalOpen(true)}>Create New Lobby</Button>
         )}
       </div>
 
       {lobbies.length > 0 ? (
-        lobbies.map((lobby) => <LobbyItem key={lobby._id} lobby={lobby} />)
+        lobbies.map((lobby) => (
+          // Pass the handler function to each item
+          <LobbyItem key={lobby._id} lobby={lobby} onView={setSelectedLobbyId} />
+        ))
       ) : (
         <p className="text-center mt-8">No public lobbies found. Why not create one?</p>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {/* Modal for Creating a Lobby */}
+      <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
         <CreateLobbyForm onLobbyCreated={handleLobbyCreated} />
+      </Modal>
+
+      {/* Modal for Viewing a Lobby */}
+      <Modal isOpen={!!selectedLobbyId} onClose={() => setSelectedLobbyId(null)}>
+        {selectedLobbyId && <LobbyDetailView lobbyId={selectedLobbyId} />}
       </Modal>
     </div>
   );

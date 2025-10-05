@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import api from '../api';
+import Button from './Button';
 
-const LobbyDetailPage = () => {
-  const { id } = useParams(); // Gets the ':id' from the URL
+const LobbyDetailView = ({ lobbyId }) => {
   const [lobby, setLobby] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLobby = async () => {
+      if (!lobbyId) return;
+      setLoading(true);
       try {
-        const res = await api.get(`/lobbies/${id}`);
+        const res = await api.get(`/lobbies/${lobbyId}`);
         setLobby(res.data);
       } catch (err) {
         console.error(err);
@@ -19,18 +20,13 @@ const LobbyDetailPage = () => {
       }
     };
     fetchLobby();
-  }, [id]); // Re-run this effect if the ID in the URL changes
+  }, [lobbyId]);
 
-  if (loading) {
-    return <p>Loading lobby...</p>;
-  }
-
-  if (!lobby) {
-    return <p>Lobby not found.</p>;
-  }
+  if (loading) return <p>Loading lobby details...</p>;
+  if (!lobby) return <p>Could not load lobby details.</p>;
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+    <div>
       <h1 className="text-3xl font-bold mb-4">{lobby.game}</h1>
       <p className="text-gray-700 mb-6">{lobby.description}</p>
       
@@ -49,8 +45,11 @@ const LobbyDetailPage = () => {
           </ul>
         </div>
       </div>
+      <div className="mt-6 text-center">
+        <Button>Join Lobby</Button>
+      </div>
     </div>
   );
 };
 
-export default LobbyDetailPage;
+export default LobbyDetailView;

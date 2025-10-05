@@ -9,7 +9,7 @@ GET http://localhost:5001/api/lobbies
 # 3. PASTE the token after "x-auth-token: " below.
 POST http://localhost:5001/api/lobbies
 Content-Type: application/json
-x-auth-token: PASTE_YOUR_JWT_TOKEN_HERE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhkZDZlNWU4OTMxNWRlNDcwZTUyY2RmIn0sImlhdCI6MTc1OTM1MjA1MiwiZXhwIjoxNzU5MzcwMDUyfQ.f5LHPjX9xDsV1Zb6EQTgpF0sTNY3zSF7NBtDM1bK2ow
 
 {
     "game": "Valorant",
