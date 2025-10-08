@@ -76,6 +76,42 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// @route   POST /api/lobbies/join_private
+// @desc    Join a private lobby using ID and password
+// @access  Private
+router.post('/join_private', auth, async (req, res) => {
+  const { lobbyId, password } = req.body;
+  try {
+    const lobby = await Lobby.findById(lobbyId);
+    if (!lobby || !lobby.isPrivate) {
+      return res.status(404).json({ msg: 'Private lobby not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, lobby.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Incorrect password' });
+    }
+
+    // Add user if not already in and not full, then save and return
+    if (lobby.players.some(p => p.equals(req.user.id))) {
+      return res.status(400).json({ msg: 'User already in lobby' });
+    }
+    if (lobby.players.length >= lobby.maxPlayers) {
+      return res.status(400).json({ msg: 'Lobby is full' });
+    }
+
+    lobby.players.push(req.user.id);
+    await lobby.save();
+
+    await lobby.populate(['creator', 'players'], 'username');
+    res.json(lobby);
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   PUT /api/lobbies/:id/join
 // @desc    Join a lobby
 // @access  Private
