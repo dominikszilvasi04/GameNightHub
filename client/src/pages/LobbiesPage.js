@@ -6,6 +6,7 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import CreateLobbyForm from '../components/CreateLobbyForm';
 import LobbyDetailView from '../components/LobbyDetailView'; 
+import JoinPrivateLobbyForm from '../components/JoinPrivateLobbyForm';
 
 const LobbiesPage = () => {
   const [lobbies, setLobbies] = useState([]);
@@ -13,6 +14,7 @@ const LobbiesPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedLobbyId, setSelectedLobbyId] = useState(null); 
   const { user } = useContext(AuthContext);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   useEffect(() => { 
     const fetchLobbies = async () => {
@@ -28,6 +30,12 @@ const LobbiesPage = () => {
     fetchLobbies();
   }, []);
 
+  const handleLobbyJoined = (joinedLobby) => {
+    // You could either refresh the list or add it if it's not there
+    setLobbies(prev => [joinedLobby, ...prev.filter(l => l._id !== joinedLobby._id)]);
+    setIsJoinModalOpen(false);
+  };
+
   const handleLobbyCreated = (newLobby) => {
     setLobbies([newLobby, ...lobbies]);
     setIsCreateModalOpen(false);
@@ -40,9 +48,12 @@ const LobbiesPage = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Public Lobbies</h1>
+        <h1 className="text-3xl font-bold">Your Lobbies</h1>
         {user && (
-          <Button onClick={() => setIsCreateModalOpen(true)}>Create New Lobby</Button>
+          <div className="flex space-x-2">
+            <Button onClick={() => setIsJoinModalOpen(true)}>Join Private Lobby</Button>
+            <Button onClick={() => setIsCreateModalOpen(true)}>Create New Lobby</Button>
+          </div>
         )}
       </div>
 
@@ -63,6 +74,9 @@ const LobbiesPage = () => {
       {/* Modal for Viewing a Lobby */}
       <Modal isOpen={!!selectedLobbyId} onClose={() => setSelectedLobbyId(null)}>
         {selectedLobbyId && <LobbyDetailView lobbyId={selectedLobbyId} />}
+      </Modal>
+      <Modal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)}>
+        <JoinPrivateLobbyForm onLobbyJoined={handleLobbyJoined} />
       </Modal>
     </div>
   );

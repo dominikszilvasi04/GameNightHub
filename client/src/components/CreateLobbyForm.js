@@ -7,13 +7,16 @@ const CreateLobbyForm = ({ onLobbyCreated }) => {
     game: '',
     description: '',
     maxPlayers: 5,
+    isPrivate: false,
+    password: ''
   });
 
   const { game, description, maxPlayers } = formData;
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
+  const onChange = (e) => {
+  const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+  setFormData({ ...formData, [e.target.name]: value });
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -63,6 +66,32 @@ const CreateLobbyForm = ({ onLobbyCreated }) => {
           required
         />
       </div>
+      <div className="mb-4">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            name="isPrivate"
+            checked={formData.isPrivate}
+            onChange={onChange}
+            className="mr-2"
+          />
+          <span>Make Lobby Private</span>
+        </label>
+      </div>
+      {formData.isPrivate && (
+        <div className="mb-4">
+          <label className="block text-gray-700">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={onChange}
+            className="w-full p-2 border border-gray-300 rounded mt-1"
+            required
+          />
+        </div>
+      )}
+
       <Button type="submit" fullWidth>Create Lobby</Button>
     </form>
   );

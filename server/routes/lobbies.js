@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Lobby = require('../models/Lobby');   
 const User = require('../models/User');    
-const bcrypt = require('bcryptjs'); 
+const bcrypt = require('bcryptjs');
 
 // @route   GET /api/lobbies
 // @desc    Get all public lobbies
@@ -45,25 +45,26 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a new lobby
 // @access  Private 
 router.post('/', auth, async (req, res) => {
-  // Add password to destructuring
+  // Get the data from the request body
   const { game, description, maxPlayers, isPrivate, password } = req.body;
+
+  const isPrivateBool = isPrivate === true || isPrivate === 'on';
 
   try {
     const newLobby = new Lobby({
       game,
       description,
       maxPlayers,
-      isPrivate,
+      isPrivate: isPrivateBool, // <-- Use our new boolean value here
       creator: req.user.id,
       players: [req.user.id],
     });
 
-    // If the lobby is private, hash the password before saving
-    if (isPrivate && password) {
+    if (isPrivateBool && password) {
       const salt = await bcrypt.genSalt(10);
       newLobby.password = await bcrypt.hash(password, salt);
-    } else if (isPrivate && !password) {
-        return res.status(400).json({ msg: 'Private lobbies require a password.' });
+    } else if (isPrivateBool && !password) {
+      return res.status(400).json({ msg: 'Private lobbies require a password.' });
     }
 
     const lobby = await newLobby.save();
