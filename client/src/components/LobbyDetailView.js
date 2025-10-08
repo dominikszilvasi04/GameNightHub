@@ -43,6 +43,11 @@ const LobbyDetailView = ({ lobbyId }) => {
     }
   };
 
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(lobby.inviteCode);
+    alert('Invite Code copied to clipboard!');
+  };
+
   if (loading) return <p>Loading lobby details...</p>;
   if (!lobby) return <p>Could not load lobby details.</p>;
 
@@ -74,6 +79,15 @@ const LobbyDetailView = ({ lobbyId }) => {
           <h2 className="text-xl font-semibold mb-2">Details</h2>
           <p><strong>Creator:</strong> {lobby.creator.username}</p>
           <p><strong>Status:</strong> {lobby.isPrivate ? 'Private' : 'Public'}</p>
+          {lobby.isPrivate && (
+            <div className="mt-2">
+              <strong>Invite Code:</strong>
+              <div className="flex items-center space-x-2 mt-1">
+                <span className="font-mono bg-gray-200 p-1 rounded">{lobby.inviteCode}</span>
+                <Button onClick={handleCopyCode}>Copy</Button>
+              </div>
+            </div>
+          )}
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-2">Players ({lobby.players.length} / {lobby.maxPlayers})</h2>

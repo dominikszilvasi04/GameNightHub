@@ -3,13 +3,14 @@ import api from '../api';
 import Button from './Button';
 
 const JoinPrivateLobbyForm = ({ onLobbyJoined }) => {
-  const [lobbyId, setLobbyId] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [password, setPassword] = useState('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/lobbies/join_private', { lobbyId, password });
+      // Use the new endpoint and send inviteCode
+      const res = await api.post('/lobbies/join', { inviteCode, password });
       onLobbyJoined(res.data);
     } catch (err) {
       console.error(err);
@@ -21,11 +22,11 @@ const JoinPrivateLobbyForm = ({ onLobbyJoined }) => {
     <form onSubmit={onSubmit}>
       <h2 className="text-2xl font-bold mb-4">Join a Private Lobby</h2>
       <div className="mb-4">
-        <label className="block text-gray-700">Lobby ID</label>
+        <label className="block text-gray-700">Invite Code</label>
         <input
           type="text"
-          value={lobbyId}
-          onChange={(e) => setLobbyId(e.target.value)}
+          value={inviteCode}
+          onChange={(e) => setInviteCode(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mt-1"
           required
         />
