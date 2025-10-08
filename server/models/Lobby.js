@@ -26,8 +26,12 @@ const LobbySchema = new Schema({
         required: true
     },
     isPrivate: {
-        type: Boolean,
-        default: false
+    type: Boolean,
+    default: false
+    },
+    password: { 
+        type: String,
+        required: function() { return this.isPrivate; } // Required only if lobby is private
     }
 }, {
     timestamps: true 
