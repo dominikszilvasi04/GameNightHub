@@ -32,6 +32,11 @@ const LobbySchema = new Schema({
     password: { 
         type: String,
         required: function() { return this.isPrivate; } // Required only if lobby is private
+    },
+    inviteCode: {
+    type: String,
+    required: true,
+    unique: true
     }
 }, {
     timestamps: true 

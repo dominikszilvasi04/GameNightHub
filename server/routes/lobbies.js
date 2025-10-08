@@ -4,6 +4,7 @@ const auth = require('../middleware/auth');
 const Lobby = require('../models/Lobby');   
 const User = require('../models/User');    
 const bcrypt = require('bcryptjs');
+const { nanoid } = require('nanoid');
 
 // @route   GET /api/lobbies
 // @desc    Get all public lobbies
@@ -45,19 +46,27 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a new lobby
 // @access  Private 
 router.post('/', auth, async (req, res) => {
-  // Get the data from the request body
   const { game, description, maxPlayers, isPrivate, password } = req.body;
-
   const isPrivateBool = isPrivate === true || isPrivate === 'on';
 
   try {
+    // Generate a unique, 6-character invite code
+    let inviteCode = nanoid(6);
+    let existingLobby = await Lobby.findOne({ inviteCode });
+    // Keep generating a new code until we find one that's not in use
+    while (existingLobby) {
+      inviteCode = nanoid(6);
+      existingLobby = await Lobby.findOne({ inviteCode });
+    }
+
     const newLobby = new Lobby({
       game,
       description,
       maxPlayers,
-      isPrivate: isPrivateBool, // <-- Use our new boolean value here
+      isPrivate: isPrivateBool,
       creator: req.user.id,
       players: [req.user.id],
+      inviteCode, // Add the new code to the lobby object
     });
 
     if (isPrivateBool && password) {
@@ -77,15 +86,16 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// @route   POST /api/lobbies/join_private
-// @desc    Join a private lobby using ID and password
+// @route   POST /api/lobbies/join
+// @desc    Join a private lobby using invite code and password
 // @access  Private
-router.post('/join_private', auth, async (req, res) => {
-  const { lobbyId, password } = req.body;
+router.post('/join', auth, async (req, res) => {
+  const { inviteCode, password } = req.body;
   try {
-    const lobby = await Lobby.findById(lobbyId);
+    // Find the lobby by the human-readable invite code
+    const lobby = await Lobby.findOne({ inviteCode });
     if (!lobby || !lobby.isPrivate) {
-      return res.status(404).json({ msg: 'Private lobby not found' });
+      return res.status(404).json({ msg: 'Private lobby not found with that code' });
     }
 
     const isMatch = await bcrypt.compare(password, lobby.password);
@@ -93,7 +103,6 @@ router.post('/join_private', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Incorrect password' });
     }
 
-    // Add user if not already in and not full, then save and return
     if (lobby.players.some(p => p.equals(req.user.id))) {
       return res.status(400).json({ msg: 'User already in lobby' });
     }
