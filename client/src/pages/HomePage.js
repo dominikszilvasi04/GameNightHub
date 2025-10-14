@@ -17,8 +17,10 @@ import bg2 from '../assets/images/bg2.jpg';
 import bg3 from '../assets/images/bg3.jpg';
 import bg4 from '../assets/images/bg4.jpg';
 import bg5 from '../assets/images/bg5.jpg';
+import bg6 from '../assets/images/bg6.jpg';
+import bg7 from '../assets/images/bg7.jpg';
 
-const slideImages = [bg1, bg2, bg3, bg4, bg5];
+const slideImages = [bg1, bg2, bg3, bg4, bg5, bg6, bg7];
 
 const HomePage = () => {
   return (
