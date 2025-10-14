@@ -8,90 +8,54 @@ const CreateLobbyForm = ({ onLobbyCreated }) => {
     description: '',
     maxPlayers: 5,
     isPrivate: false,
-    password: ''
+    password: '',
   });
 
-  const { game, description, maxPlayers } = formData;
+  const { game, description, maxPlayers, isPrivate, password } = formData;
 
   const onChange = (e) => {
-  const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-  setFormData({ ...formData, [e.target.name]: value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      // The interceptor now handles the token automatically!
-      const res = await api.post('/lobbies', formData);
+      // The imageUrl is no longer sent from here
+      const res = await api.post('/lobbies', { game, description, maxPlayers, isPrivate, password });
       onLobbyCreated(res.data);
     } catch (err) {
       console.error(err);
-      alert('Failed to create lobby');
+      alert(err.response?.data?.msg || 'Failed to create lobby');
     }
   };
-
 
   return (
     <form onSubmit={onSubmit}>
       <h2 className="text-2xl font-bold mb-4">Create a New Lobby</h2>
+      {/* Form fields for game, description, maxPlayers, isPrivate, password */}
+      {/* The image search and URL fields are now gone */}
       <div className="mb-4">
         <label className="block text-gray-700">Game Title</label>
-        <input
-          type="text"
-          name="game"
-          value={game}
-          onChange={onChange}
-          className="w-full p-2 border border-gray-300 rounded mt-1"
-          required
-        />
+        <input type="text" name="game" value={game} onChange={onChange} className="w-full p-2 border border-gray-300 rounded mt-1" required />
       </div>
       <div className="mb-4">
         <label className="block text-gray-700">Description</label>
-        <input
-          type="text"
-          name="description"
-          value={description}
-          onChange={onChange}
-          className="w-full p-2 border border-gray-300 rounded mt-1"
-        />
+        <input type="text" name="description" value={description} onChange={onChange} className="w-full p-2 border border-gray-300 rounded mt-1" />
       </div>
       <div className="mb-4">
         <label className="block text-gray-700">Max Players</label>
-        <input
-          type="number"
-          name="maxPlayers"
-          value={maxPlayers}
-          onChange={onChange}
-          className="w-full p-2 border border-gray-300 rounded mt-1"
-          min="2"
-          required
-        />
+        <input type="number" name="maxPlayers" value={maxPlayers} onChange={onChange} className="w-full p-2 border border-gray-300 rounded mt-1" min="2" required />
       </div>
       <div className="mb-4">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            name="isPrivate"
-            checked={formData.isPrivate}
-            onChange={onChange}
-            className="mr-2"
-          />
-          <span>Make Lobby Private</span>
-        </label>
+        <label className="flex items-center"><input type="checkbox" name="isPrivate" checked={isPrivate} onChange={onChange} className="mr-2" /><span>Make Lobby Private</span></label>
       </div>
-      {formData.isPrivate && (
+      {isPrivate && (
         <div className="mb-4">
           <label className="block text-gray-700">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={onChange}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
-            required
-          />
+          <input type="password" name="password" value={password} onChange={onChange} className="w-full p-2 border border-gray-300 rounded mt-1" required />
         </div>
       )}
-
       <Button type="submit" fullWidth>Create Lobby</Button>
     </form>
   );

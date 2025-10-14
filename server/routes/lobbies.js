@@ -87,6 +87,41 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// @route   PUT /api/lobbies/:id
+// @desc    Update a lobby (e.g., change image URL)
+// @access  Private (only for the creator)
+router.put('/:id', auth, async (req, res) => {
+  const { imageUrl, description, maxPlayers } = req.body;
+
+  try {
+    let lobby = await Lobby.findById(req.params.id);
+
+    if (!lobby) {
+      return res.status(404).json({ msg: 'Lobby not found' });
+    }
+
+    // Authorization check: Make sure the user is the lobby creator
+    if (lobby.creator.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    // Update the fields
+    if (imageUrl !== undefined) lobby.imageUrl = imageUrl;
+    if (description !== undefined) lobby.description = description;
+    if (maxPlayers !== undefined) lobby.maxPlayers = maxPlayers;
+
+    await lobby.save();
+    
+    // Return the fully populated lobby
+    await lobby.populate(['creator', 'players'], 'username');
+    res.json(lobby);
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   POST /api/lobbies/join
 // @desc    Join a private lobby using invite code and password
 // @access  Private
