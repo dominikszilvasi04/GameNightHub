@@ -46,7 +46,7 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a new lobby
 // @access  Private 
 router.post('/', auth, async (req, res) => {
-  const { game, description, maxPlayers, isPrivate, password } = req.body;
+  const { game, description, maxPlayers, isPrivate, password, imageUrl } = req.body;
   const isPrivateBool = isPrivate === true || isPrivate === 'on';
 
   try {
@@ -56,6 +56,7 @@ router.post('/', auth, async (req, res) => {
     // Keep generating a new code until we find one that's not in use
     while (existingLobby) {
       inviteCode = nanoid(6);
+      imageUrl,
       existingLobby = await Lobby.findOne({ inviteCode });
     }
 

@@ -23,6 +23,7 @@ app.use(express.json());
 // --- Define Routes ---
 app.use('/api/users', require('./routes/users'));
 app.use('/api/lobbies', require('./routes/lobbies'));
+app.use('/api/utils', require('./routes/utils'));
 
 // --- Socket.IO Connection Logic ---
 io.on('connection', (socket) => {
