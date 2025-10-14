@@ -1,25 +1,33 @@
 import React from 'react';
 import Button from './Button';
-import PlaceholderImage from './PlaceholderImage'; // <-- Import our new component
+import PlaceholderImage from './PlaceholderImage';
 
 const LobbyItem = ({ lobby, onView }) => {
   return (
+    // PARENT CONTAINER: Has 'flex' and a fixed height 'h-32'.
+    // This is the container that controls the layout.
     <div className="bg-white shadow-md rounded-lg mb-4 flex h-32 overflow-hidden">
-      {/* Conditionally render the image or the placeholder */}
+      
+      {/* CHILD 1: The Image or Placeholder */}
       {lobby.imageUrl ? (
         <img
           src={lobby.imageUrl}
           alt={lobby.game}
-          className="w-48 object-cover"
+          // 'w-48' gives it a fixed width.
+          // 'object-cover' makes the image fill the space without distortion.
+          // 'flex-shrink-0' prevents it from being squished.
+          // NO 'h-full' is needed; it will stretch automatically to the parent's height.
+          className="w-48 object-cover flex-shrink-0"
         />
       ) : (
         <PlaceholderImage text={lobby.game} />
       )}
 
-      <div className="p-4 flex-grow flex justify-between items-center">
-        <div>
-          <h3 className="text-xl font-bold text-gray-800">{lobby.game}</h3>
-          <p className="text-gray-600 mt-1 truncate max-w-xs">{lobby.description || 'No description provided.'}</p>
+      {/* CHILD 2: The Text Content */}
+      <div className="p-4 flex-grow flex justify-between items-center min-w-0">
+        <div className="min-w-0">
+          <h3 className="text-xl font-bold text-gray-800 truncate">{lobby.game}</h3>
+          <p className="text-gray-600 mt-1 truncate">{lobby.description || 'No description provided.'}</p>
           <p className="text-sm text-gray-500 mt-2">Created by: {lobby.creator.username}</p>
         </div>
         <div className="text-center flex-shrink-0 ml-4">

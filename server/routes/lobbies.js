@@ -50,14 +50,9 @@ router.post('/', auth, async (req, res) => {
   const isPrivateBool = isPrivate === true || isPrivate === 'on';
 
   try {
-    // Generate a unique, 6-character invite code
     let inviteCode = nanoid(6);
-    let existingLobby = await Lobby.findOne({ inviteCode });
-    // Keep generating a new code until we find one that's not in use
-    while (existingLobby) {
+    while (await Lobby.findOne({ inviteCode })) {
       inviteCode = nanoid(6);
-      imageUrl,
-      existingLobby = await Lobby.findOne({ inviteCode });
     }
 
     const newLobby = new Lobby({
@@ -67,7 +62,8 @@ router.post('/', auth, async (req, res) => {
       isPrivate: isPrivateBool,
       creator: req.user.id,
       players: [req.user.id],
-      inviteCode, // Add the new code to the lobby object
+      inviteCode,
+      imageUrl, 
     });
 
     if (isPrivateBool && password) {
@@ -84,7 +80,7 @@ router.post('/', auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
-  }
+}
 });
 
 // @route   PUT /api/lobbies/:id

@@ -1,19 +1,15 @@
-### GET all public lobbies (will be empty at first)
-GET http://localhost:5001/api/lobbies
-
-### ========================================
-
-### CREATE a new lobby (PROTECTED)
-# 1. First, LOG IN using the request from the last lesson to get a fresh token.
-# 2. COPY the token from the response.
-# 3. PASTE the token after "x-auth-token: " below.
-POST http://localhost:5001/api/lobbies
+### Login an existing user
+POST http://localhost:5001/api/users/login
 Content-Type: application/json
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhkZDZlNWU4OTMxNWRlNDcwZTUyY2RmIn0sImlhdCI6MTc1OTM1MjA1MiwiZXhwIjoxNzU5MzcwMDUyfQ.f5LHPjX9xDsV1Zb6EQTgpF0sTNY3zSF7NBtDM1bK2ow
 
 {
-    "game": "Valorant",
-    "description": "Chill competitive games, need 2 more!",
-    "maxPlayers": 5,
-    "isPrivate": false
+    "email": "admin@admin.com",
+    "password": "admin123"
 }
+
+
+### Test Pexels Image Search
+# Note: Get a fresh token by running your login request first
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhlZTIzMmExNDY0NjE2NzQxOWZhMWE2IiwidXNlcm5hbWUiOiJBZG1pbiJ9LCJpYXQiOjE3NjA0NjQ4MDgsImV4cCI6MTc2MDQ4MjgwOH0.HEAuLy6A0wZpPKjkW1eTEb4Y79c56lMpFmHcpNVa018
+GET http://localhost:5001/api/utils/search-images?query=cyberpunk
+x-auth-token: {{token}}

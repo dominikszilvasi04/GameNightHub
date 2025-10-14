@@ -34,13 +34,13 @@ const LobbySchema = new Schema({
         required: function() { return this.isPrivate; } // Required only if lobby is private
     },
     inviteCode: {
-    type: String,
-    required: true,
-    unique: true
+        type: String,
+        required: true,
+        unique: true
     },
     imageUrl: { 
-    type: String,
-    default: ''
+        type: String,
+        default: ''
     }
 }, {
     timestamps: true 
