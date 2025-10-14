@@ -50,7 +50,7 @@ const LobbiesPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Your Lobbies</h1>
         {user && (
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             <Button onClick={() => setIsJoinModalOpen(true)}>Join Private Lobby</Button>
             <Button onClick={() => setIsCreateModalOpen(true)}>Create New Lobby</Button>
           </div>
