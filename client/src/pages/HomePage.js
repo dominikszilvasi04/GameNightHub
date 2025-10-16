@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
+import AuthContext from '../context/AuthContext';
 
 // 1. Import Swiper components and modules
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -29,20 +30,22 @@ import bg13 from '../assets/images/bg13.jpg';
 const slideImages = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10, bg11, bg12, bg13];
 
 const HomePage = () => {
+  // 3. Get the current user from our global context
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       <div className="absolute inset-0">
-        {/* 3. Configure the Swiper component */}
         <Swiper
-          modules={[Autoplay, EffectFade]} // Tell Swiper which modules to use
-          effect="slide" // Set the transition effect
-          loop={true} // Loop the slides
+          modules={[Autoplay, EffectFade]}
+          effect="fade"
+          loop={true}
+          speed={1200}
           autoplay={{
-            delay: 5000, // 5 seconds per slide
-            disableOnInteraction: false, // Autoplay continues even after user interaction
+            delay: 5000,
+            disableOnInteraction: false,
           }}
           className="h-full w-full"
-          speed={1200}
         >
           {slideImages.map((slideImage, index) => (
             <SwiperSlide key={index}>
@@ -55,7 +58,6 @@ const HomePage = () => {
         </Swiper>
       </div>
 
-      {/* The centered content overlay (this part remains the same) */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center bg-black bg-opacity-50 text-white z-10">
         <h1 className="text-5xl md:text-7xl font-extrabold mb-4 animate-fade-in-down">
           Welcome to GameNightHub
@@ -64,9 +66,24 @@ const HomePage = () => {
           Your central hub for finding teammates and organizing game nights.
           Stop playing solo and find your perfect squad today.
         </p>
-        <Link to="/lobbies">
-          <Button>Browse Lobbies</Button>
-        </Link>
+        
+        {/* 4. Conditionally render the buttons */}
+        {user ? (
+          // If user is logged in:
+          <Link to="/lobbies">
+            <Button>Browse Lobbies</Button>
+          </Link>
+        ) : (
+          // If user is logged out:
+          <div className="flex space-x-4">
+            <Link to="/register">
+              <Button>Register</Button>
+            </Link>
+            <Link to="/login">
+              <Button>Login</Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
